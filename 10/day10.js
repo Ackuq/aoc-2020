@@ -68,8 +68,8 @@ const part2 = () => {
         for (let i = 0; i < choices.length; i++) {
             const element = choices[i];
 
-            if (element in memo) {
-                solutions += memo[element];
+            if (element in currMemo) {
+                solutions += currMemo[element];
                 continue;
             }
 
@@ -86,7 +86,7 @@ const part2 = () => {
 
             let [newSolutions, newMemo] = iterate(element, newRest, currMemo);
             solutions += newSolutions;
-            currMemo = newMemo;
+            currMemo = { ...newMemo, ...currMemo };
         }
 
         return [solutions, { ...currMemo, [current]: solutions }];
