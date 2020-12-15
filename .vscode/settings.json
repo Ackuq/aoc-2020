@@ -1,6 +1,6 @@
 {
     "python.linting.enabled": true,
-    "python.linting.banditEnabled": true,
     "python.formatting.provider": "black",
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "python.linting.flake8Enabled": true
 }
