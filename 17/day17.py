@@ -39,24 +39,6 @@ class State1:
     def __init__(self, active: List[Triple]) -> None:
         self.active = active
 
-    def max_x(self):
-        return max(self.active, key=lambda coord: coord[0])[0]
-
-    def min_x(self):
-        return min(self.active, key=lambda coord: coord[0])[0]
-
-    def max_y(self):
-        return max(self.active, key=lambda coord: coord[1])[1]
-
-    def min_y(self):
-        return min(self.active, key=lambda coord: coord[1])[1]
-
-    def max_z(self):
-        return max(self.active, key=lambda coord: coord[2])[2]
-
-    def min_z(self):
-        return min(self.active, key=lambda coord: coord[2])[2]
-
     def count_neighbors(self) -> Dict[Triple, int]:
         active_neighbors: Dict[Triple, int] = {}
         for (x, y, z) in self.active:
@@ -93,20 +75,6 @@ class State1:
             self.transition()
             cycle += 1
 
-    def print_state(self, cycle):
-        print("\nAfter {} cycles\n".format(cycle))
-        for z in range(self.min_z(), self.max_z() + 1):
-            print("z={}".format(z))
-            for y in range(self.max_y(), self.min_y() - 1, -1):
-                row = ""
-                for x in range(self.min_x(), self.max_x() + 1):
-                    if (x, y, z) in self.active:
-                        row += CubeState.ACTIVE.value
-                    else:
-                        row += CubeState.INACTIVE.value
-                print(row)
-            print("\n")
-
 
 class State2(State1):
     Cell = Quadruple
@@ -114,12 +82,6 @@ class State2(State1):
 
     def __init__(self, active: QuadrupleList) -> None:
         self.active = active
-
-    def max_w(self):
-        return max(self.active, key=lambda coord: coord[3])[3]
-
-    def min_w(self):
-        return min(self.active, key=lambda coord: coord[3])[3]
 
     def count_neighbors(self) -> Dict[Quadruple, int]:
         active_neighbors: Dict[Quadruple, int] = {}
@@ -137,21 +99,6 @@ class State2(State1):
                                 else:
                                     active_neighbors[neighbor] = 1
         return active_neighbors
-
-    def print_state(self, cycle):
-        print("\nAfter {} cycles\n".format(cycle))
-        for w in range(self.min_w(), self.max_w() + 1):
-            for z in range(self.min_z(), self.max_z() + 1):
-                print("z={}, w={}".format(z, w))
-                for y in range(self.max_y(), self.min_y() - 1, -1):
-                    row = ""
-                    for x in range(self.min_x(), self.max_x() + 1):
-                        if (x, y, z, w) in self.active:
-                            row += CubeState.ACTIVE.value
-                        else:
-                            row += CubeState.INACTIVE.value
-                    print(row)
-                print("\n")
 
 
 def part1():
