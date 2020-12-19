@@ -1,12 +1,15 @@
 import re
 from functools import reduce
-from typing import SupportsAbs
+from typing import Dict, List, Tuple, Union
 
 file_name = "input"
 PART2 = True
 
+Rule = Union[int, Tuple[List[int], ...], List[int], str]
+Rules = Dict[int, Rule]
 
-def reduce_rules(prev, rule: str):
+
+def reduce_rules(prev: Rules, rule: str):
     [key, value] = rule.split(": ")
 
     char = re.match(r"^\"([a-zA-Z]).*\"$", value)
@@ -24,21 +27,22 @@ def reduce_rules(prev, rule: str):
 
 input = open("./{}.txt".format(file_name)).read()
 
-[rules, messages] = input.split("\n\n")
+[rules_string, messages_string] = input.split("\n\n")
 
-rules = reduce(reduce_rules, rules.split("\n"), {})
-messages = messages.split("\n")
+rules = reduce(reduce_rules, rules_string.split("\n"), {})
+
+messages = messages_string.split("\n")
 
 
-def generate_regex(rule, index, part2):
+def generate_regex(rule: Rule, key: int, part2: bool) -> str:
     if part2:
-        if index == 8:
+        if key == 8:
             return "({})+".format(generate_regex(rules[42], 42, part2))
-        elif index == 11:
+        elif key == 11:
             regex42 = generate_regex(rules[42], 42, part2)
             regex31 = generate_regex(rules[31], 31, part2)
             result = map(
-                lambda i: "{}{{{}}}{}{{{}}}".format(regex42, i, regex31, i),
+                lambda i: "%s{%d}%s{%d}" % (regex42, i, regex31, i),
                 range(1, 10),
             )
             return "({})".format("|".join(result))
@@ -47,8 +51,8 @@ def generate_regex(rule, index, part2):
     if isinstance(rule, str):
         return rule
     elif isinstance(rule, list):
-        for rule_index in rule:
-            result += generate_regex(rules[rule_index], rule_index, part2)
+        for sub_rule_key in rule:
+            result += generate_regex(rules[sub_rule_key], sub_rule_key, part2)
     elif isinstance(rule, tuple):
         options = []
         for sub_rule in rule:
