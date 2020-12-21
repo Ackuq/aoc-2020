@@ -275,7 +275,6 @@ def part2():
             image_tile.flip()
         else:
             image_tile.rotate()
-
     return image_water - (monster_size * count)
 
 
